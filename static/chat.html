@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>QRChat — эфимерный чат сервис</title>
+    <style>
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+box-sizing: inherit;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #eee;
+  font-size: 1.2rem;
+  line-height: 1.2;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+}
+
+body.error {
+  background-color: red;
+}
+
+body.error:after {
+  position: absolute;
+  content: 'ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ВСЕ СЛОМАЛОСЬ ';
+  mix-blend-mode: exclusion;
+  color: white;
+  font-size: 2rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.messages {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.messages > article {
+  background-color: #fff;
+  padding: 1rem;
+  margin: 1rem;
+  min-width: 60vw;
+  box-sizing: content-box;
+}
+
+.messages > article sub:after {
+content: " : ";
+}
+
+.controls {
+}
+
+.controls > input {
+  height: 4rem;
+  width: calc(100% - 8rem);
+  font-size: 2rem;
+}
+
+.controls > button {
+  height: 4rem;
+  width: 8rem;
+  font-size: 2rem;
+}
+    </style>
+  </head>
+  <body>
+    <section class="messages" role="messages">
+      <article role="first-message">
+        <sub>👻 </sub>
+        <span>Привет, похоже ты первый в этом чате. Напиши все что накипело.</span>
+      </article>
+    </section>
+    <section class="controls">
+      <input type="text" autofocus role="chat-message"><button role="send-button">send</button>
+    </section>
+    <script>
+var ws = new WebSocket('ws://' + window.location.hostname + ':' + window.location.port + '/ws?chat=' + encodeURIComponent(window.location.pathname));
+var fragment = null;
+var timeout = null;
+
+function addMessage(message){
+  if(fragment === null) fragment = new DocumentFragment();
+  if(timeout !== null) clearTimeout(timeout);
+  var chatMessage = document.createElement('article');
+  var author = document.createElement('sub');
+  author.textContent = message.author_emoji;
+  var body = document.createElement('span');
+  body.textContent = message.body;
+  chatMessage.appendChild(author);
+  chatMessage.appendChild(body);
+  fragment.appendChild(chatMessage);
+  setTimeout(flushDom, 50);
+}
+
+var messages = document.querySelector('[role="messages"]');
+var chatMessage = document.querySelector('[role="chat-message"]');
+var sendButton = document.querySelector('[role="send-button"]');
+var firstMessage = document.querySelector('[role="first-message"]');
+
+function sendMessage(){
+   var body = chatMessage.value;
+   chatMessage.value = '';
+   ws.send(JSON.stringify({message_type: 'message', body: body}));
+}
+
+chatMessage.addEventListener('keydown', function(e){
+  if(e.keyCode == 13) sendMessage()
+});
+
+sendButton.addEventListener('click', function(e){
+  e.preventDefault();
+  sendMessage();
+});
+
+function flushDom() {
+  if(firstMessage) {
+    firstMessage.remove();
+    firstMessage = undefined;
+  }
+  messages.appendChild(fragment);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+ws.onopen = function() {
+}
+
+ws.onclose = function() {
+  document.body.className = "error"
+}
+
+ws.onmessage = function(event) {
+  addMessage(JSON.parse(event.data));
+}
+    </script>
+
+  </body>
+</html>

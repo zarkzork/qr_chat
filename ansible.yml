@@ -1,0 +1,120 @@
+---
+- hosts: all
+  vars:
+    - repo: git@github.com:zarkzork/qr_chat.git
+    - project_name: qr_chat
+    - branch: master
+    - swap_file_path: /swap
+    - swap_file_size_kb: 1024
+
+  tasks:
+    # add swap
+
+    - name: Create swap file
+      command: dd if=/dev/zero of={{ swap_file_path }} bs=1024 count={{ swap_file_size_kb }}k
+               creates="{{ swap_file_path }}"
+      tags:
+        - swap.file.create
+      become: true
+
+    - name: Change swap file permissions
+      file: path="{{ swap_file_path }}"
+            owner=root
+            group=root
+            mode=0600
+      tags:
+        - swap.file.permissions
+      become: true
+
+
+    - name: "Check swap file type"
+      command: file {{ swap_file_path }}
+      register: swapfile
+      tags:
+        - swap.file.mkswap
+      become: true
+
+
+    - name: Make swap file
+      command: "mkswap {{ swap_file_path }}"
+      when: swapfile.stdout.find('swap file') == -1
+      tags:
+        - swap.file.mkswap
+      become: true
+
+    - name: Write swap entry in fstab
+      mount: name=none
+             src={{ swap_file_path }}
+             fstype=swap
+             opts=sw
+             passno=0
+             dump=0
+             state=present
+      tags:
+        - swap.fstab
+      become: true
+
+
+    - name: Mount swap
+      command: "swapon {{ swap_file_path }}"
+      when: ansible_swaptotal_mb < 1
+      tags:
+        - swap.file.swapon
+      become: true
+
+    # Basic setup
+
+    - name: Fetch docker.io apt key
+      apt_key: keyserver=keyserver.ubuntu.com id=58118E89F3A912897C070ADBF76221572C52609D state=present
+      become: yes
+
+    - name: add docker.io repo
+      apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+      become: yes
+
+    - name: Install basic packages
+      apt: name={{item}} state=present
+      become: yes
+      with_items:
+        - locales
+        - curl
+        - git
+        - htop
+        - docker-engine
+        - python-pip
+
+    # Project setup
+
+    - name: install docker-compose
+      pip: name=docker-compose state=latest
+      become: true
+
+    - name: add secret souce
+      include_vars: secrets.yml
+
+    - name: create deploy user keyfile
+      copy: content="{{github_private_key}}" dest=~/.ssh/deploy_key.pem mode=400
+      become: true
+
+    - name: projects dir
+      file: path=/projects/{{project_name}} state=directory
+      become: true
+
+    - name: checkout project
+      git: repo={{repo}} dest=/projects/{{project_name}} version={{branch}} update=yes accept_hostkey=yes key_file=~/.ssh/deploy_key.pem
+      become: true
+      notify:
+        - docker-compose restart
+
+    - name: initial docker-compose setup
+      shell: docker-compose up -d
+      args:
+        chdir: /projects/{{project_name}}
+      become: true
+
+  handlers:
+    - name: docker-compose restart
+      shell: docker-compose restart
+      args:
+        chdir: /projects/{{project_name}}
+      become: true
