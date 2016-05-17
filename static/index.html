@@ -3,7 +3,6 @@
   <head>
     <title>websocketd count example</title>
     <style>
-
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -53,8 +52,12 @@ table {
 	border-spacing: 0;
 }
 
-* {
+html {
   box-sizing: border-box;
+}
+
+*, *:before, *:after {
+box-sizing: inherit;
 }
 
 body {
@@ -62,71 +65,14 @@ body {
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
+  background-color: #eee;
+  font-size: 1.2rem;
+  line-height: 1.2;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
 }
-
-.messages {
-  overflow-y: scroll;
-}
-
-.controls {
-}
-
-.controls > input {
-  height: 4rem;
-  width: calc(100% - 8rem);
-  font-size: 2rem;
-}
-
-.controls > button {
-  height: 4rem;
-  width: 8rem;
-  font-size: 2rem;
-}
-
-
-
     </style>
   </head>
   <body>
-    <section class="messages" role="messages">
-    </section>
-    <section class="controls">
-      <input type="text" autofocus><button>send</button>
-    </section>
-
-    <script>
-var fragment = null;
-var timeout = null;
-
-function addMessage(message){
-  if(fragment === null) fragment = new DocumentFragment();
-  if(timeout !== null) clearTimeout(timeout);
-  var chatMessage = document.createElement('article');
-  var author = document.createElement('div');
-  author.textContent = message.author_emoji;
-  var body = document.createElement('div');
-  body.textContent = message.body;
-  chatMessage.appendChild(author);
-  chatMessage.appendChild(body);
-  fragment.appendChild(chatMessage);
-  setTimeout(flushDom, 50);
-}
-
-function flushDom() {
-  document.querySelector('[role="messages"]').appendChild(fragment);
-}
-
-var ws = new WebSocket('ws://' + window.location.hostname + '/ws');
-ws.onopen = function() {
-  document.body.style.backgroundColor = '#cfc';
-};
-ws.onclose = function() {
-  document.body.style.backgroundColor = null;
-};
-ws.onmessage = function(event) {
-  addMessage(JSON.parse(event.data));
-};
-    </script>
-
+    <h1>Nothing to see here</h1>
   </body>
 </html>
