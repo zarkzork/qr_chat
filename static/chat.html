@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>websocketd count example</title>
+    <title>foobar.chat</title>
     <style>
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
@@ -69,6 +69,7 @@ body {
   font-size: 1.2rem;
   line-height: 1.2;
 	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+  margin-bottom: 8rem;
 }
 
 body.error {
@@ -92,10 +93,13 @@ body.error {
 }
 
 .messages > article sub:after {
-content: " : ";
+  content: " : ";
 }
 
 .controls {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .controls > input {
@@ -122,7 +126,7 @@ content: " : ";
     </section>
 
     <script>
-var ws = new WebSocket('ws://' + window.location.hostname + '/ws?chat=' + encodeURIComponent(window.location.pathname));
+var ws = new WebSocket('wss://' + window.location.hostname + '/ws?chat=' + encodeURIComponent(window.location.pathname));
 var fragment = null;
 var timeout = null;
 

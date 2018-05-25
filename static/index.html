@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>websocketd count example</title>
+    <title>foobar.chat</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
     <style>
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -61,18 +62,57 @@ box-sizing: inherit;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
   background-color: #eee;
   font-size: 1.2rem;
   line-height: 1.2;
 	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Geneva, Verdana, sans-serif;
+  padding: 4rem;
+}
+
+article {
+  margin: 1rem;
+  max-width: 45rem;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 2.1rem;
+}
+
+h1, p, img {
+  margin-bottom: 1rem;
+  display: block;
+}
+
+footer {
+  margin-top: 8rem;
+  color: #555;
 }
     </style>
   </head>
   <body>
-    <h1>Nothing to see here</h1>
+    <article>
+      <h1>QR chat</h1>
+      <p>
+        Привет друг, это чат без истории.
+      </p>
+      <p>
+        Каждая чат комната хранит только последние 1000 сообщений.
+        Каждый чат уникален, списка чатов нигде нет.
+        Хотя какие-то умники пытались получить весь список, но у них получилось только испортить себе карму.
+      </p>
+      <p>
+        Чтобы попасть в чат, нужно получить на него ссылку или быть первым в мире человеком который пользуется QR кодами.
+      </p>
+      <p>
+        Общий чатик:
+      </p>
+      <p>
+        <a href="https://foobar.chat/c/main">https://foobar.chat/c/main</a>
+      </p>
+      <footer>
+        🙈🙉🙊 для обратной связи пишите на <a href="mailto:qrchat@zarkzork.com">qrchat@zarkzork.com</a>
+      </footer>
+    </article>
   </body>
 </html>

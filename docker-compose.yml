@@ -1,23 +1,30 @@
-nginx:
-  image: nginx
-  ports:
-   - "80:80"
+caddy:
+  image: abiosoft/caddy
   restart: always
-  working_dir: /static
-  entrypoint: nginx -c /app/nginx.conf
+  ports:
+    - "80:80"
+    - "443:443"
   volumes:
-   - './:/app:ro'
+   - './static:/app/static:ro'
+   - './Caddyfile:/etc/Caddyfile:ro'
+   - './.caddy:/root/.caddy'
   links:
     - app
+  env_file:
+   - './.env'
+
 app:
   build: .
   expose:
    - "9090"
   restart: always
   working_dir: /app
-  entrypoint: bash -c "bundle install --local && exec websocketd --port 9090 --staticdir=./static --passenv GEM_HOME,BUNDLE_APP_CONFIG,RUBY_MAJOR,RUBYGEMS_VERSION,BUNDLE_BIN,BUNDLE_PATH,RUBY_VERSION,BUNDLER_VERSION,PATH bundle exec ruby /app/chat.rb"
+  entrypoint: bash -c "bundle install --local && exec websocketd --port 9090 --passenv GEM_HOME,BUNDLE_APP_CONFIG,RUBY_MAJOR,RUBYGEMS_VERSION,BUNDLE_BIN,BUNDLE_PATH,RUBY_VERSION,BUNDLER_VERSION,PATH bundle exec ruby /app/chat.rb"
   volumes:
-   - '.:/app:ro'
+   - './Gemfile:/app/Gemfile:ro'
+   - './Gemfile.lock:/app/Gemfile.lock:ro'
+   - './chat.rb:/app/chat.rb:ro'
+
   links:
     - redis
 

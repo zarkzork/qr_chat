@@ -1,0 +1,14 @@
+{$HOST_NAME}
+
+limits 10kb
+gzip
+root /app/static
+
+rewrite {
+  r /c/.*
+  to chat.html
+}
+
+proxy /ws http://app:9090/ {
+  websocket
+}
